@@ -1,9 +1,9 @@
 section .data
-    source db "Hello", 0
+    source db "Hello", 10
     src_len equ $ - source
 
 section .bss
-    dest resb 6
+    dest resb src_len
 
 section .text
     global _start
@@ -14,11 +14,6 @@ _start:
     mov rdi, dest
     mov rcx, src_len
     ;===============
-    jmp copy_loop
-    mov rax,1
-    mov rsi,1
-    mov rsi,dest
-    jmp exit
 
 copy_loop:
     mov al,[rsi]
@@ -29,6 +24,13 @@ copy_loop:
 
     dec rcx
     jnz copy_loop
+
+    mov rax,1
+    mov rdi,1
+    mov rsi,dest
+    mov rdx ,src_len
+    syscall
+    jmp exit
 
 exit:
  mov rax,60
